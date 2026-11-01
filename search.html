@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Bills — GRT BIKES</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{background:#0a0f1e;color:white;min-height:100vh}
+.navbar{width:100%;padding:18px 6%;display:flex;justify-content:space-between;align-items:center;background:rgba(10,15,30,0.9);backdrop-filter:blur(12px);border-bottom:1px solid rgba(56,189,248,0.1);position:sticky;top:0;z-index:100}
+.logo{font-size:22px;font-weight:800;letter-spacing:3px}
+.logo span{color:#38bdf8}
+.nav-links a{text-decoration:none;color:rgba(255,255,255,0.55);padding:7px 16px;border-radius:30px;font-size:13px;font-weight:500;transition:all 0.3s;border:1px solid transparent;margin-left:6px}
+.nav-links a:hover,.nav-links a.active{color:#38bdf8;background:rgba(56,189,248,0.1);border-color:rgba(56,189,248,0.25)}
+.page{padding:44px 6%}
+.page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:30px;flex-wrap:wrap;gap:20px}
+.page-title h1{font-size:30px;font-weight:800;margin-bottom:5px;letter-spacing:-0.5px}
+.page-title p{color:rgba(255,255,255,0.35);font-size:14px}
+.btn{padding:10px 22px;border-radius:30px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.3s;text-decoration:none;border:none;display:inline-block}
+.btn-primary{background:#38bdf8;color:#0a0f1e}
+.btn-primary:hover{background:white}
+.summary-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:28px}
+.summary-card{background:#111827;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:20px 18px}
+.summary-card .label{font-size:11px;color:rgba(255,255,255,0.3);font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px}
+.summary-card .value{font-size:24px;font-weight:800;color:#38bdf8}
+.summary-card .sub{font-size:12px;color:rgba(255,255,255,0.25);margin-top:4px}
+.search-box{background:#111827;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:20px 24px;margin-bottom:22px}
+.search-box form{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.search-input-wrap{flex:1;position:relative;min-width:220px}
+.search-input-wrap input{width:100%;padding:12px 16px 12px 42px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:white;font-size:14px;outline:none;transition:0.3s}
+.search-input-wrap input::placeholder{color:rgba(255,255,255,0.25)}
+.search-input-wrap input:focus{border-color:#38bdf8;background:rgba(56,189,248,0.06)}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.filter-select{padding:12px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:white;font-size:14px;outline:none;cursor:pointer;transition:0.3s}
+.filter-select:focus{border-color:#38bdf8}
+.filter-select option{background:#111827;color:white}
+.search-btn{padding:12px 24px;background:#38bdf8;color:#0a0f1e;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:0.3s;white-space:nowrap}
+.search-btn:hover{background:white}
+.clear-btn{padding:12px 20px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.1);border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:0.3s;text-decoration:none;white-space:nowrap}
+.clear-btn:hover{background:rgba(255,255,255,0.1);color:white}
+.search-result-info{margin-top:14px;font-size:13px;color:rgba(255,255,255,0.35)}
+.search-result-info span{color:#38bdf8;font-weight:700}
+.table-wrap{background:#111827;border:1px solid rgba(255,255,255,0.07);border-radius:20px;overflow:hidden}
+.table-head{padding:16px 22px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center}
+.table-head h2{font-size:15px;font-weight:700}
+.count-badge{background:rgba(56,189,248,0.1);color:#38bdf8;border:1px solid rgba(56,189,248,0.2);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:700px}
+thead tr{background:rgba(255,255,255,0.025)}
+th{padding:13px 18px;text-align:left;font-size:11px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:1.2px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.06);white-space:nowrap}
+td{padding:14px 18px;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;color:rgba(255,255,255,0.75)}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:rgba(255,255,255,0.02)}
+.invoice-badge{background:rgba(56,189,248,0.1);color:#38bdf8;border:1px solid rgba(56,189,248,0.2);padding:4px 10px;border-radius:8px;font-size:12px;font-weight:700;font-family:monospace;white-space:nowrap}
+.avatar{width:32px;height:32px;border-radius:50%;background:rgba(56,189,248,0.15);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#38bdf8;flex-shrink:0}
+.customer-cell{display:flex;align-items:center;gap:10px}
+.cname{font-weight:600;color:white;font-size:14px}
+.cphone{font-size:12px;color:rgba(255,255,255,0.3);margin-top:2px}
+.bike-name{font-weight:600;color:rgba(255,255,255,0.85)}
+.bike-reg{font-size:12px;color:rgba(255,255,255,0.3);margin-top:2px;font-family:monospace}
+.amount-green{font-weight:700;color:#4ade80}
+.amount-yellow{color:rgba(250,200,50,0.8);font-weight:600}
+.date-pill{background:rgba(255,255,255,0.05);padding:4px 10px;border-radius:8px;font-size:12px;color:rgba(255,255,255,0.4);white-space:nowrap}
+.empty{text-align:center;padding:60px 20px}
+.empty-icon{font-size:48px;margin-bottom:16px}
+.empty p{color:rgba(255,255,255,0.25);font-size:15px}
+.empty a{color:#38bdf8;text-decoration:none;font-weight:600}
+.footer{text-align:center;padding:28px;color:rgba(255,255,255,0.18);font-size:13px;border-top:1px solid rgba(255,255,255,0.05);margin-top:40px}
+@media(max-width:700px){
+  .search-box form{flex-direction:column;align-items:stretch}
+  .filter-select,.search-btn,.clear-btn{width:100%}
+  .nav-links a{font-size:12px;padding:6px 12px}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">GRT <span>BIKES</span></div>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/search" class="active">All Bills</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <div class="page-header">
+    <div class="page-title">
+      <h1>🧾 Billing Records</h1>
+      <p>All invoices generated through GRT BIKES ERP</p>
+    </div>
+    <a href="/" class="btn btn-primary">+ New Invoice</a>
+  </div>
+
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="label">Total Bills</div>
+      <div class="value">{{ data|length }}</div>
+      <div class="sub">Invoices found</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Total Revenue</div>
+      <div class="value">₹{{ "{:,.0f}".format(total_revenue) }}</div>
+      <div class="sub">Before GST</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">GST Collected</div>
+      <div class="value">₹{{ "{:,.0f}".format(total_gst) }}</div>
+      <div class="sub">@ 18%</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Grand Total</div>
+      <div class="value">₹{{ "{:,.0f}".format(grand_total) }}</div>
+      <div class="sub">Including GST</div>
+    </div>
+  </div>
+
+  <div class="search-box">
+    <form action="/search" method="GET">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          name="q"
+          value="{{ query }}"
+          placeholder="Search customer, invoice, bike, phone..."
+          autofocus
+        >
+      </div>
+      <select name="filter" class="filter-select">
+        <option value="all"      {% if filter_by == 'all'      %}selected{% endif %}>All Fields</option>
+        <option value="customer" {% if filter_by == 'customer' %}selected{% endif %}>Customer Name</option>
+        <option value="invoice"  {% if filter_by == 'invoice'  %}selected{% endif %}>Invoice No</option>
+        <option value="bike"     {% if filter_by == 'bike'     %}selected{% endif %}>Bike Name</option>
+        <option value="phone"    {% if filter_by == 'phone'    %}selected{% endif %}>Phone</option>
+      </select>
+      <button type="submit" class="search-btn">Search</button>
+      {% if query %}
+        <a href="/search" class="clear-btn">✕ Clear</a>
+      {% endif %}
+    </form>
+    {% if query %}
+    <div class="search-result-info">
+      Showing <span>{{ data|length }}</span> result{% if data|length != 1 %}s{% endif %} for
+      "<span>{{ query }}</span>"
+      {% if filter_by != 'all' %}in <span>{{ filter_by }}</span>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-head">
+      <h2>All Invoices</h2>
+      <span class="count-badge">{{ data|length }} record{% if data|length != 1 %}s{% endif %}</span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Invoice</th>
+            <th>Customer</th>
+            <th>Bike</th>
+            <th>Amount</th>
+            <th>GST</th>
+            <th>Total</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in data %}
+          <tr>
+            <td style="color:rgba(255,255,255,0.25);font-size:13px">{{ row[0] }}</td>
+            <td><span class="invoice-badge">{{ row[1] }}</span></td>
+            <td>
+              <div class="customer-cell">
+                <div class="avatar">{{ row[2][0]|upper if row[2] else '?' }}</div>
+                <div>
+                  <div class="cname">{{ row[2] }}</div>
+                  <div class="cphone">{{ row[3] }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="bike-name">{{ row[5] }} — {{ row[6] }}</div>
+              <div class="bike-reg">{{ row[7] if row[7] else '—' }}</div>
+            </td>
+            <td>₹{{ "{:,.0f}".format(row[10]) }}</td>
+            <td class="amount-yellow">₹{{ "{:,.0f}".format(row[11]) }}</td>
+            <td class="amount-green">₹{{ "{:,.0f}".format(row[12]) }}</td>
+            <td><span class="date-pill">{{ row[13] if row[13] else '—' }}</span></td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="8">
+              <div class="empty">
+                <div class="empty-icon">📭</div>
+                <p>
+                  {% if query %}
+                    No bills found for "{{ query }}". <a href="/search">Clear search</a>
+                  {% else %}
+                    No bills yet. <a href="/">Create your first invoice!</a>
+                  {% endif %}
+                </p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">© 2026 GRT BIKES ERP System &nbsp;·&nbsp; Chennai, Tamil Nadu</div>
+
+</body>
+</html>
